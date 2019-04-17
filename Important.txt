@@ -1,0 +1,39 @@
+From Julian Anthony to Everyone:  06:37 PM
+Hi All
+From Wuelfhis Alexis Asuaje Pazo to Everyone:  06:40 PM
+https://tower.000ukso.sbp.eyclienthub.com PROD
+https://tower.000ukso.sbp.eyclienthubd.com DEV
+EY_CTPE_DE_CorePlatform_PRE.GID <EY_CTPE_DE_CorePlatform_PRE.GID@ey.net>
+From Wuelfhis Alexis Asuaje Pazo to Everyone:  07:08 PM
+https://eysbp.visualstudio.com/EY%20-%20Platform%20Engineering/_wiki/wikis/CorePlatformWiki?wikiVersion=GBmaster&pagePath=%2FSystem%20Management%20Services%2FAnsible%20Tower%2FAPI_Integration&pageId=757
+From Wuelfhis Alexis Asuaje Pazo to Everyone:  07:22 PM
+['new', 'pending', 'running', 'waiting', 'successful', 'failed']
+LOGIN CURL: curl --header "Content-Type: application/json"  --data  '{"username":"YOUR -3 ACCOUNT", "password":"YOURPASSWORD"}' -X POST https://tower.000ukso.sbp.eyclienthubd.com/api/v2/authtoken/ 
+RUN JOB EXAMPLE: curl --header "Content-Type: application/json"   -X POST   --data '{"extra_vars":{"var_deploy_to":"CORE","var_environment":"Development", "var_location":"westus2", "var_deploymentId":"GTP001" ,"var_resourceGroupName": "UW2DGTP001RSG0I","var_eventGridSubscriptionUrl":"https://testgtpotto.azurewebsites.net/runtime/webhooks/EventGrid?functionName=EventGridTrigger1&code=dD9bmaYplkIw43NJ7Uo//wcs7JJTB4YK2bFLS8N0a5vDnwp9HDxhUw=="}}'    https://tower.000ukso.sbp.eyclienthub.com/api/v2/JOBID/launch/
+POWER SHELL: $uriCreateJob = "http://usedgtp001tmp01.trafficmanager.net/api/tower?code=N7Z6DPfxl6pZOt8RyTjSdQHuiYq7xRWIYAepJm5GaqmMj//BoLDLbg=="
+
+$bodyCreateJob = @"
+{
+    "component": "event-grid",
+    "extra_vars": {
+        "var_deploy_to": "CORE",
+        "var_environment": "Development",
+        "var_location": "westus2",
+        "var_deploymentId": "GTP001",
+        "var_resourceGroupName": "UW2DGTP001RSG0I",
+        "var_eventGridSubscriptionUrl": "https://testgtpotto.azurewebsites.net/runtime/webhooks/EventGrid?functionName=EventGridTrigger1&code=dD9bmaYplkIw43NJ7Uo//wcs7JJTB4YK2bFLS8N0a5vDnwp9HDxhUw=="
+    }
+}
+"@
+
+$createResult = Invoke-WebRequest -Uri $uriCreateJob -Method Post -Body $bodyCreateJob | Select Content
+$resu = $createResult.Content | ConvertFrom-Json | select msg  
+$data = $resu.msg
+$jobID = $data | select jobid
+$jobID
+$jobID = 34006
+
+while(!$i) {
+$boodyCheckJob = '{"jobid":$jobID }' 
+
+$uriCheckJob = "http://usedgtp001tmp01.trafficmanager.net/api/JobStatus?code=N7Z6DPfxl6pZOt8RyTjSdQHui
